@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "model:generate": "npx typeorm-model-generator -h localhost -d postgres -u postgres -x postgres -e postgres",
-    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/shared/database/config.ts",
+    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/shared/infra/database/config.ts",
     "migration:run": "yarn typeorm migration:run",
     "migration:revert": "yarn typeorm migration:revert"
   },

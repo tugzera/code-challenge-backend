@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 config({
   path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
@@ -18,3 +18,5 @@ export const typeormConfig: DataSourceOptions = {
   entities: [`${__dirname}/models/*.{js,ts}`],
   logging: false,
 };
+
+export const dataSource = new DataSource(typeormConfig);

@@ -5,4 +5,6 @@ export namespace InterestPointProvider {
   export const CREATE_INTEREST_POINT_CATEGORY = Symbol(
     'CREATE_INTEREST_POINT_CATEGORY',
   );
+  export const INTEREST_POINT_REPOSITORY = Symbol('INTEREST_POINT_REPOSITORY');
+  export const CREATE_INTEREST_POINT = Symbol('CREATE_INTEREST_POINT');
 }

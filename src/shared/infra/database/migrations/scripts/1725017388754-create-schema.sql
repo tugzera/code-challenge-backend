@@ -1,3 +1,18 @@
+-- Database generated with pgModeler (PostgreSQL Database Modeler).
+-- pgModeler version: 1.0.2
+-- PostgreSQL version: 15.0
+-- Project Site: pgmodeler.io
+-- Model Author: ---
+
+-- Database creation must be performed outside a multi lined SQL file. 
+-- These commands were put in this file only as a convenience.
+-- 
+-- object: new_database | type: DATABASE --
+-- DROP DATABASE IF EXISTS new_database;
+-- CREATE DATABASE new_database;
+-- ddl-end --
+
+
 -- object: public.template | type: TABLE --
 -- DROP TABLE IF EXISTS public.template CASCADE;
 CREATE TABLE public.template (
@@ -36,7 +51,7 @@ CREATE TABLE public.interest_points (
 	interest_point_category_id uuid NOT NULL,
 	name varchar(100) NOT NULL,
 	description text,
-	"position" geometry NOT NULL,
+	"position" point NOT NULL,
 	created_at timestamp with time zone NOT NULL,
 	updated_at timestamp with time zone,
 	deleted_at timestamp with time zone,
@@ -49,7 +64,7 @@ COMMENT ON COLUMN public.interest_points.alternative_id IS E'Numeric value that 
 -- ddl-end --
 COMMENT ON COLUMN public.interest_points.name IS E'The name of the interest point';
 -- ddl-end --
-COMMENT ON COLUMN public.interest_points.description IS E'The description of the interest point. Ex: Good place to have a breakfast with the family';
+COMMENT ON COLUMN public.interest_points.description IS E'The descripition of the intereset point. Ex: Good place to have a breakfast with the family';
 -- ddl-end --
 COMMENT ON COLUMN public.interest_points."position" IS E'The latitude and longitude of the interest point.';
 -- ddl-end --
@@ -147,9 +162,9 @@ USING btree
 );
 -- ddl-end --
 
--- object: idx__part__uq__interest_point_name | type: INDEX --
--- DROP INDEX IF EXISTS public.idx__part__uq__interest_point_name CASCADE;
-CREATE UNIQUE INDEX idx__part__uq__interest_point_name ON public.interest_point_categories
+-- object: idx__part__uq__intereset_point_name | type: INDEX --
+-- DROP INDEX IF EXISTS public.idx__part__uq__intereset_point_name CASCADE;
+CREATE UNIQUE INDEX idx__part__uq__intereset_point_name ON public.interest_point_categories
 USING btree
 (
 	name

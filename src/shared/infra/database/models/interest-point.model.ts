@@ -19,8 +19,11 @@ export class InterestPointTypeormModel extends BaseTypeormModel {
   @Column('text', { name: 'description', nullable: true })
   description: string | null;
 
-  @Column('geometry', { name: 'position' })
-  position: string;
+  @Column('point', { name: 'position' })
+  position: string | object;
+
+  @Column('uuid', { name: 'interest_point_category_id' })
+  interestPointCategoryId: string;
 
   @ManyToOne(
     () => InterestPointCategoryTypeormModel,
@@ -37,4 +40,9 @@ export class InterestPointTypeormModel extends BaseTypeormModel {
     (userInterestPoints) => userInterestPoints.interestPoint,
   )
   userInterestPoints: UserInterestPointTypeormModel[];
+
+  constructor(props: Partial<InterestPointTypeormModel>) {
+    super();
+    Object.assign(this, props);
+  }
 }
