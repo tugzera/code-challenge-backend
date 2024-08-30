@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Inject,
   Param,
   ParseUUIDPipe,
@@ -12,12 +15,14 @@ import {
 import {
   ApiCreatedResponse,
   ApiExtraModels,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { PaginationResponseProps } from 'src/shared/domain/types';
 import { ApiPaginatedResponse } from 'src/shared/presentation/decorators/paginated.decorator';
 import { PaginationPropsDto } from 'src/shared/presentation/dtos/pagination-props.dto';
+import { DeleteUser } from 'src/users/application/use-cases/delete-user';
 import { GetUserList } from 'src/users/application/use-cases/get-user-list';
 import { UpdateUser } from 'src/users/application/use-cases/update-user';
 import { User } from 'src/users/domain/entities/user';
@@ -42,6 +47,8 @@ export class UserController {
     private getUserList: GetUserList.Contract,
     @Inject(UserProvider.UPDATE_USER)
     private updateUser: UpdateUser.Contract,
+    @Inject(UserProvider.DELETE_USER)
+    private deleteUser: DeleteUser.Contract,
   ) {}
 
   @ApiCreatedResponse({ type: ResponseCreateUserDto })
@@ -75,5 +82,15 @@ export class UserController {
     @Body() input: UpdateUserDto,
   ): Promise<ResponseUpdateUserDto> {
     return this.updateUser.execute({ ...input, userId });
+  }
+
+  @ApiNoContentResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':userId')
+  async handleDeleteUser(
+    @Param('userId', ParseUUIDPipe)
+    userId: string,
+  ): Promise<void> {
+    await this.deleteUser.execute({ userId });
   }
 }

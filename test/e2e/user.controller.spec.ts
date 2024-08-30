@@ -194,7 +194,7 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    it('should throw UserNotFoundException if provided userId is not an valid uuid', async () => {
+    it('should throw BadRequestException if provided params not pass on validation pipe', async () => {
       const userId = randomUUID();
       await agent(app.getHttpServer())
         .patch(url.replace(':userId', userId))
@@ -217,7 +217,7 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    it('should throw UserNotFoundException if provided userId is not an valid uuid', async () => {
+    it('should throw UserNotFoundException if provided userId is not found', async () => {
       const userId = randomUUID();
       await agent(app.getHttpServer())
         .patch(url.replace(':userId', userId))
@@ -276,6 +276,45 @@ describe('UserController (e2e)', () => {
       });
       expect(createdUser.password).not.toBe(checkUser?.passwordHash);
       await userFactory.repository.softDelete(createdUser.id);
+    });
+  });
+
+  describe('@DELETE /users', () => {
+    const url = '/users/:userId';
+    it('should throw BadRequestException if provided userId is not an valid uuid', async () => {
+      await agent(app.getHttpServer())
+        .delete(url)
+        .expect(({ status }) => {
+          expect(status).toBe(HttpStatus.BAD_REQUEST);
+        });
+    });
+
+    it('should throw UserNotFoundException if provided userId was not found', async () => {
+      const userId = randomUUID();
+      await agent(app.getHttpServer())
+        .delete(url.replace(':userId', userId))
+        .expect(({ status, body }) => {
+          const error = new UserNotFoundException();
+          expect(status).toBe(error.code);
+          expect(body.error).toBe(error.message);
+          expect(body.code).toBe(error.name);
+        });
+    });
+
+    it('should delete user on success', async () => {
+      const [createdUser] = await userFactory.generateRegisters({});
+      await agent(app.getHttpServer())
+        .delete(url.replace(':userId', createdUser.id))
+        .expect(({ status }) => {
+          expect(status).toBe(HttpStatus.NO_CONTENT);
+        });
+      const checkUser = await userFactory.repository.findOne({
+        where: {
+          id: createdUser.id,
+        },
+        withDeleted: true,
+      });
+      expect(checkUser.deletedAt).not.toBeNull();
     });
   });
 });
