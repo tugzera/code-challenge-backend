@@ -24,4 +24,9 @@ export class UserTypeormModel extends BaseTypeormModel {
     (userInterestPoints) => userInterestPoints.user,
   )
   userInterestPoints: UserInterestPointModel[];
+
+  constructor(props: Partial<UserTypeormModel> = {}) {
+    super();
+    Object.assign(this, props);
+  }
 }

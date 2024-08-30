@@ -1,6 +1,6 @@
-import { HashGenerator } from 'src/shared/contracts/hash-generator';
+import { HashGenerator } from '../../shared/contracts/hash-generator';
+import { UserRepository } from '../domain/repositories';
 import { User } from '../domain/user';
-import { UserRepository } from '../repositories';
 
 export class CreateUser implements CreateUser.Contract {
   constructor(

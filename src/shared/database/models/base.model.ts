@@ -1,9 +1,5 @@
-import { BaseEntity, Column, Entity, Index, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, PrimaryColumn } from 'typeorm';
 
-@Index('idx__uq__interest_point_name', ['deletedAt', 'name'], { unique: true })
-@Index('pk__interest_point_categories', ['id'], { unique: true })
-@Index('idx__part__uq__interest_point_name', ['name'], { unique: true })
-@Entity('interest_point_categories', { schema: 'public' })
 export class BaseTypeormModel extends BaseEntity {
   @PrimaryColumn('uuid', { primary: true, name: 'id' })
   id: string;

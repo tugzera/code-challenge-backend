@@ -3,8 +3,6 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 config();
 
-console.log('PATH', `${__dirname}/migrations/*.{js,ts}`);
-
 const typeormConfig: DataSourceOptions = {
   database: process.env.DB_NAME,
   type: 'postgres',
