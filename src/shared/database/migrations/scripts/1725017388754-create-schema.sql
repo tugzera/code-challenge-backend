@@ -24,8 +24,8 @@ ALTER TABLE public.template OWNER TO postgres;
 
 -- object: postgis | type: EXTENSION --
 -- DROP EXTENSION IF EXISTS postgis CASCADE;
-CREATE EXTENSION postgis
-WITH SCHEMA public;
+-- CREATE EXTENSION postgis
+-- WITH SCHEMA public;
 -- ddl-end --
 
 -- object: public.interest_points | type: TABLE --
