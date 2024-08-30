@@ -1,6 +1,6 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { BaseTypeormModel } from './base.model';
-import { UserInterestPointModel } from './user-interest-point.model';
+import { UserInterestPointTypeormModel } from './user-interest-point.model';
 
 @Index('idx__uq__email', ['deletedAt', 'email'], { unique: true })
 @Index('idx__part__uq__email', ['email'], { unique: true })
@@ -20,10 +20,10 @@ export class UserTypeormModel extends BaseTypeormModel {
   passwordHash: string;
 
   @OneToMany(
-    () => UserInterestPointModel,
+    () => UserInterestPointTypeormModel,
     (userInterestPoints) => userInterestPoints.user,
   )
-  userInterestPoints: UserInterestPointModel[];
+  userInterestPoints: UserInterestPointTypeormModel[];
 
   constructor(props: Partial<UserTypeormModel> = {}) {
     super();

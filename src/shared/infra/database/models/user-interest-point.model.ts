@@ -1,6 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseTypeormModel } from './base.model';
-import { InterestPointModel } from './interest-point.model';
+import { InterestPointTypeormModel } from './interest-point.model';
 import { UserTypeormModel } from './user.model';
 
 @Index(
@@ -13,7 +13,7 @@ import { UserTypeormModel } from './user.model';
   unique: true,
 })
 @Entity('user_interest_points', { schema: 'public' })
-export class UserInterestPointModel extends BaseTypeormModel {
+export class UserInterestPointTypeormModel extends BaseTypeormModel {
   @Column('uuid', { name: 'user_id' })
   userId: string;
 
@@ -21,12 +21,12 @@ export class UserInterestPointModel extends BaseTypeormModel {
   interestPointId: string;
 
   @ManyToOne(
-    () => InterestPointModel,
+    () => InterestPointTypeormModel,
     (interestPoints) => interestPoints.userInterestPoints,
     { onDelete: 'RESTRICT', onUpdate: 'CASCADE' },
   )
   @JoinColumn([{ name: 'interest_point_id', referencedColumnName: 'id' }])
-  interestPoint: InterestPointModel;
+  interestPoint: InterestPointTypeormModel;
 
   @ManyToOne(() => UserTypeormModel, (users) => users.userInterestPoints, {
     onDelete: 'RESTRICT',
