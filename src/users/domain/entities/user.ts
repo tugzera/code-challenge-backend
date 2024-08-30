@@ -17,15 +17,26 @@ export class User extends BaseEntity {
     email: string;
     password: string;
   }) {
-    // metodo de criação separado para fazer validações ou algo assim
-    // if (props.email.length > 100) {
-    //   throw new Error('Email is too long');
-    // }
     return new User({
       firstName: props.firstName,
       lastName: props.lastName,
       email: props.email,
       password: props.password,
     });
+  }
+
+  update(props: {
+    email: string | undefined;
+    password?: string;
+    firstName?: string;
+    lastName?: string;
+  }) {
+    Object.entries(props).forEach((value) => {
+      const [key, param] = value;
+      if (props[key] !== undefined) {
+        this[key] = param;
+      }
+    });
+    this.updatedAt = new Date();
   }
 }

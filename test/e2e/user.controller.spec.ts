@@ -1,6 +1,10 @@
 import { HttpStatus } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { User } from 'src/users/domain/entities/user';
-import { UserEmailAlreadyRegisteredException } from 'src/users/domain/exceptions';
+import {
+  UserEmailAlreadyRegisteredException,
+  UserNotFoundException,
+} from 'src/users/domain/exceptions';
 import { CreateUserDto } from 'src/users/presentation/dtos/inputs';
 import { agent } from 'supertest';
 import { UserFactory } from 'test/factories';
@@ -177,6 +181,101 @@ describe('UserController (e2e)', () => {
           expect(body.items.length).toBe(1);
           expect(body.items[0].email).toBe(userSearch.email);
         });
+    });
+  });
+
+  describe('@PATCH /users', () => {
+    const url = '/users/:userId';
+    it('should throw BadRequestException if provided userId is not an valid uuid', async () => {
+      await agent(app.getHttpServer())
+        .patch(url)
+        .expect(({ status }) => {
+          expect(status).toBe(HttpStatus.BAD_REQUEST);
+        });
+    });
+
+    it('should throw UserNotFoundException if provided userId is not an valid uuid', async () => {
+      const userId = randomUUID();
+      await agent(app.getHttpServer())
+        .patch(url.replace(':userId', userId))
+        .send({ email: '', firstName: '', lastName: '', password: '' })
+        .expect(({ status, body }) => {
+          expect(status).toBe(HttpStatus.BAD_REQUEST);
+          expect(body).toStrictEqual({
+            error: {
+              firstName: ['must be longer than or equal to 3 characters'],
+              lastName: ['must be longer than or equal to 3 characters'],
+              email: ['must be an email'],
+              password: [
+                'must be longer than or equal to 8 characters',
+                'too weak',
+              ],
+            },
+            code: 'BadRequestException',
+            translationMessage: 'Verifique seus dados',
+          });
+        });
+    });
+
+    it('should throw UserNotFoundException if provided userId is not an valid uuid', async () => {
+      const userId = randomUUID();
+      await agent(app.getHttpServer())
+        .patch(url.replace(':userId', userId))
+        .expect(({ status, body }) => {
+          const error = new UserNotFoundException();
+          expect(status).toBe(error.code);
+          expect(body.error).toBe(error.message);
+          expect(body.code).toBe(error.name);
+        });
+    });
+
+    it('should throw UserEmailAlreadyRegisteredException if provided email is already in use', async () => {
+      const [createdUser] = await userFactory.generateRegisters({});
+      const [otherUser] = await userFactory.generateRegisters({});
+      const params = {
+        firstName: 'Joseph',
+        lastName: 'Climber',
+        email: otherUser.email,
+      };
+      await agent(app.getHttpServer())
+        .patch(url.replace(':userId', createdUser.id))
+        .send(params)
+        .expect(({ status, body }) => {
+          const error = new UserEmailAlreadyRegisteredException();
+          expect(status).toBe(error.code);
+          expect(body.error).toBe(error.message);
+          expect(body.code).toBe(error.name);
+        });
+      await userFactory.repository.softDelete(createdUser.id);
+      await userFactory.repository.softDelete(otherUser.id);
+    });
+
+    it('should update user successfully', async () => {
+      const [createdUser] = await userFactory.generateRegisters({});
+      const params = {
+        firstName: 'Joseph',
+        lastName: 'Climber',
+        email: createdUser.email,
+        password: '.Senha1123',
+      };
+      await agent(app.getHttpServer())
+        .patch(url.replace(':userId', createdUser.id))
+        .send(params)
+        .expect(({ status, body }) => {
+          expect(status).toBe(HttpStatus.OK);
+          expect(body.id).toBe(createdUser.id);
+          expect(body.firstName).toBe(params.firstName);
+          expect(body.lastName).toBe(params.lastName);
+          expect(body.email).toBe(params.email);
+          expect(body.createdAt).not.toBe(body.updatedAt);
+        });
+      const checkUser = await userFactory.repository.findOne({
+        where: {
+          id: createdUser.id,
+        },
+      });
+      expect(createdUser.password).not.toBe(checkUser?.passwordHash);
+      await userFactory.repository.softDelete(createdUser.id);
     });
   });
 });

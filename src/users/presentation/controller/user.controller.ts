@@ -1,15 +1,35 @@
-import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PaginationResponseProps } from 'src/shared/domain/types';
 import { ApiPaginatedResponse } from 'src/shared/presentation/decorators/paginated.decorator';
 import { PaginationPropsDto } from 'src/shared/presentation/dtos/pagination-props.dto';
 import { GetUserList } from 'src/users/application/use-cases/get-user-list';
+import { UpdateUser } from 'src/users/application/use-cases/update-user';
 import { User } from 'src/users/domain/entities/user';
 import { CreateUser } from '../../../users/application/use-cases/create-user';
 import { UserProvider } from '../../../users/infra/ioc/user-provider';
 import { CreateUserDto, GetUserListDto, SortDirection } from '../dtos/inputs';
-import { ResponseCreateUserDto } from '../dtos/outputs';
-import { ResponseGetUserListDto } from '../dtos/outputs/response-get-user-list.dto';
+import { UpdateUserDto } from '../dtos/inputs/update-user.dto';
+import {
+  ResponseCreateUserDto,
+  ResponseGetUserListDto,
+  ResponseUpdateUserDto,
+} from '../dtos/outputs';
 
 @ApiExtraModels(ResponseGetUserListDto, PaginationPropsDto)
 @ApiTags('users')
@@ -20,6 +40,8 @@ export class UserController {
     private createUser: CreateUser.Contract,
     @Inject(UserProvider.GET_USER_LIST)
     private getUserList: GetUserList.Contract,
+    @Inject(UserProvider.UPDATE_USER)
+    private updateUser: UpdateUser.Contract,
   ) {}
 
   @ApiCreatedResponse({ type: ResponseCreateUserDto })
@@ -27,8 +49,7 @@ export class UserController {
   async handleCreateUser(
     @Body() input: CreateUserDto,
   ): Promise<ResponseCreateUserDto> {
-    const response = await this.createUser.execute(input);
-    return response;
+    return this.createUser.execute(input);
   }
 
   @ApiPaginatedResponse({ model: ResponseGetUserListDto })
@@ -44,5 +65,15 @@ export class UserController {
       sortDirection: input.sortDirection as SortDirection,
     });
     return response;
+  }
+
+  @ApiOkResponse({ type: ResponseUpdateUserDto })
+  @Patch(':userId')
+  async handleUpdateUser(
+    @Param('userId', ParseUUIDPipe)
+    userId: string,
+    @Body() input: UpdateUserDto,
+  ): Promise<ResponseUpdateUserDto> {
+    return this.updateUser.execute({ ...input, userId });
   }
 }
