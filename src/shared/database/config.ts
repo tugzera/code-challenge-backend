@@ -1,9 +1,9 @@
 import { config } from 'dotenv';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 
 config();
 
-const typeormConfig: DataSourceOptions = {
+export const typeormConfig: DataSourceOptions = {
   database: process.env.DB_NAME,
   type: 'postgres',
   host: process.env.DB_HOST,
@@ -16,5 +16,3 @@ const typeormConfig: DataSourceOptions = {
   entities: [`${__dirname}/models/*.{js,ts}`],
   logging: false,
 };
-
-export const dataSource = new DataSource(typeormConfig);

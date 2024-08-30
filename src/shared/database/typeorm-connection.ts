@@ -1,12 +1,16 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { DatabaseConnection } from '../contracts/database-connection';
-import { dataSource } from './config';
 
 export class TypeormConnection implements DatabaseConnection {
   private connection: DataSource | null;
+  private config: DataSourceOptions;
+
+  constructor(props: { config: DataSourceOptions }) {
+    this.config = props.config;
+    this.connection = new DataSource(this.config);
+  }
 
   async connect(): Promise<DataSource> {
-    this.connection = dataSource;
     await this.connection.initialize();
     return this.connection;
   }
