@@ -21,7 +21,6 @@ export class UserTypeormRepository
     query.skip(dbPageIndex * pageSize).take(pageSize);
     if (searchString) {
       const words = searchString.split(' ');
-      console.log(words);
       query.where(
         new Brackets((qb) => {
           words.forEach((word) => {

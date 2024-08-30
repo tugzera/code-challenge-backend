@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { UserTypeormModel } from 'src/shared/infra/database/models/user.model';
+import { User } from 'src/users/domain/entities/user';
 import { UserEmailAlreadyRegisteredException } from 'src/users/domain/exceptions';
 import { CreateUserDto } from 'src/users/presentation/dtos/inputs';
 import { agent } from 'supertest';
@@ -70,6 +70,7 @@ describe('UserController (e2e)', () => {
           expect(body.error).toBe(error.message);
           expect(body.code).toBe(error.name);
         });
+      await userFactory.repository.softDelete(createdUser.id);
     });
 
     it('should create a new user on success', async () => {
@@ -89,14 +90,93 @@ describe('UserController (e2e)', () => {
           expect(body.lastName).toBe(params.lastName);
           expect(body.email).toBe(params.email);
         });
-      const checkUser = await databaseConnection
-        .getRepository(UserTypeormModel)
-        .findOne({
-          where: {
-            email: params.email,
-          },
-        });
+      const checkUser = await userFactory.repository.findOne({
+        where: {
+          email: params.email,
+        },
+      });
       expect(checkUser.passwordHash).not.toBe(params.password);
+      await userFactory.repository.softDelete(checkUser.id);
+    });
+  });
+
+  describe('@GET /users', () => {
+    const url = '/users';
+    let userList: User[];
+
+    beforeAll(async () => {
+      userList = await userFactory.generateRegisters({
+        count: 10,
+      });
+    });
+
+    it('should return user list on success', async () => {
+      await agent(app.getHttpServer())
+        .get(url)
+        .expect(({ status, body }) => {
+          expect(status).toBe(HttpStatus.OK);
+          expect(body.items.length).toBe(userList.length);
+          expect(body.totalItems).toBe(userList.length);
+          expect(body.page).toBe(1);
+          expect(body.pageSize).toBe(10);
+          expect(body.totalPages).toBe(1);
+        });
+    });
+
+    it('should return paginated user list on success', async () => {
+      const params = {
+        page: 1,
+        pageSize: 1,
+      };
+      await agent(app.getHttpServer())
+        .get(url)
+        .query(params)
+        .expect(({ status, body }) => {
+          expect(status).toBe(HttpStatus.OK);
+          expect(body.items.length).toBe(params.pageSize);
+          expect(body.totalItems).toBe(userList.length);
+          expect(body.page).toBe(params.page);
+          expect(body.totalPages).toBe(userList.length);
+        });
+    });
+
+    it('should return sorted user list on success', async () => {
+      const sortedUserList = userList.sort((a, b) => {
+        if (a.firstName.toLocaleLowerCase() > b.firstName.toLocaleLowerCase())
+          return 1;
+        if (a.firstName.toLocaleLowerCase() < b.firstName.toLocaleLowerCase())
+          return -1;
+        return 0;
+      });
+      const params = {
+        sortBy: 'firstName',
+        sortDirection: 'ASC',
+      };
+      await agent(app.getHttpServer())
+        .get(url)
+        .query(params)
+        .expect(({ status, body }) => {
+          expect(status).toBe(HttpStatus.OK);
+          const requestUserList = body.items.map((item) => item.firstName);
+          expect(requestUserList).toStrictEqual(
+            sortedUserList.map((item) => item.firstName),
+          );
+        });
+    });
+
+    it('should return filtered user list on success', async () => {
+      const userSearch = userList[4];
+      const params = {
+        searchString: userSearch.email,
+      };
+      await agent(app.getHttpServer())
+        .get(url)
+        .query(params)
+        .expect(({ status, body }) => {
+          expect(status).toBe(HttpStatus.OK);
+          expect(body.items.length).toBe(1);
+          expect(body.items[0].email).toBe(userSearch.email);
+        });
     });
   });
 });
