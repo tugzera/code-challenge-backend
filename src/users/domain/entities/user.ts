@@ -1,24 +1,21 @@
-import { BaseEntity } from '../../shared/domain/entities/base.entity';
+import { BaseEntity } from '../../../shared/domain/entities';
 
 export class User extends BaseEntity {
   firstName: string;
   lastName: string;
   email: string;
-  passwordHash: string;
+  password: string;
 
   constructor(props: Partial<User> = {}) {
     super(props);
-    this.firstName = props.firstName || '';
-    this.lastName = props.lastName || '';
-    this.email = props.email || '';
-    this.passwordHash = props.passwordHash || '';
+    Object.assign(this, props);
   }
 
   static create(props: {
     firstName: string;
     lastName: string;
     email: string;
-    passwordHash: string;
+    password: string;
   }) {
     // metodo de criação separado para fazer validações ou algo assim
     // if (props.email.length > 100) {
@@ -28,7 +25,7 @@ export class User extends BaseEntity {
       firstName: props.firstName,
       lastName: props.lastName,
       email: props.email,
-      passwordHash: props.passwordHash,
+      password: props.password,
     });
   }
 }

@@ -1,6 +1,6 @@
 import { BaseMapper } from 'src/shared/infra/database/mapper/base.mapper';
 import { UserTypeormModel } from 'src/shared/infra/database/models/user.model';
-import { User } from 'src/users/domain/user';
+import { User } from 'src/users/domain/entities/user';
 
 export class UserTypeormMapper implements BaseMapper<User, UserTypeormModel> {
   entityToModel(domain: User): UserTypeormModel {
@@ -9,7 +9,7 @@ export class UserTypeormMapper implements BaseMapper<User, UserTypeormModel> {
       email: domain.email,
       firstName: domain.firstName,
       lastName: domain.lastName,
-      passwordHash: domain.passwordHash,
+      passwordHash: domain.password,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
       deletedAt: domain.deletedAt,
@@ -23,7 +23,7 @@ export class UserTypeormMapper implements BaseMapper<User, UserTypeormModel> {
       email: model.email,
       firstName: model.firstName,
       lastName: model.lastName,
-      passwordHash: model.passwordHash,
+      password: model.passwordHash,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
       deletedAt: model.deletedAt,

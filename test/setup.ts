@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { config } from 'dotenv';
-import { appFactory } from 'src/app.factory';
+import { makeApp } from 'src/app.factory';
 import { AppModule } from 'src/app.module';
 import { typeormConfig } from 'src/shared/infra/database/config';
 import { TypeormConnection } from 'src/shared/infra/database/typeorm-connection';
@@ -16,14 +16,16 @@ const setup = async () => {
     imports: [AppModule],
   }).compile();
   const app = moduleRef.createNestApplication();
-  appFactory(app);
+  makeApp(app);
   await app.init();
-  const databaseConnection = await new TypeormConnection({
+  const dbConnection = new TypeormConnection({
     config: { ...typeormConfig, migrationsRun: true, dropSchema: true },
-  }).connect();
+  });
+  const databaseConnection = await dbConnection.connect();
   return {
     app,
     databaseConnection,
+    dbConnection,
   };
 };
 
@@ -38,6 +40,6 @@ global.beforeAll(async () => {
 });
 
 global.afterAll(async () => {
-  await databaseConnection.destroy();
   await app.close();
+  await databaseConnection.destroy();
 });

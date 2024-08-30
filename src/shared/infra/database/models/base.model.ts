@@ -1,4 +1,11 @@
-import { BaseEntity, Column, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export class BaseTypeormModel extends BaseEntity {
   @PrimaryColumn('uuid', { primary: true, name: 'id' })
@@ -7,12 +14,12 @@ export class BaseTypeormModel extends BaseEntity {
   @Column({ type: 'bigint', name: 'alternative_id' })
   alternativeId: number;
 
-  @Column('timestamp with time zone', { name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', nullable: false })
   createdAt: Date;
 
-  @Column('timestamp with time zone', { name: 'updated_at', nullable: true })
+  @UpdateDateColumn({ name: 'updated_at', nullable: true })
   updatedAt: Date | null;
 
-  @Column('timestamp with time zone', { name: 'deleted_at', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date | null;
 }

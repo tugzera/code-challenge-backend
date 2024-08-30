@@ -1,7 +1,8 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpExceptionFilter } from './shared/infra/filters/http-exception.filter';
 
-export const appFactory = (app: INestApplication) => {
+export const makeApp = (app: INestApplication) => {
   const config = new DocumentBuilder()
     .setTitle('API')
     .setDescription('NestJS API')
@@ -20,4 +21,5 @@ export const appFactory = (app: INestApplication) => {
     }),
   );
   app.enableCors({ origin: '*' });
+  app.useGlobalFilters(new HttpExceptionFilter());
 };

@@ -1,6 +1,7 @@
+import { UserEmailAlreadyRegisteredException } from 'src/users/domain/exceptions';
 import { HashGenerator } from '../../../shared/domain/contracts/hash-generator';
+import { User } from '../../../users/domain/entities/user';
 import { UserRepository } from '../../domain/repositories';
-import { User } from '../../domain/user';
 
 export class CreateUser implements CreateUser.Contract {
   constructor(
@@ -10,11 +11,16 @@ export class CreateUser implements CreateUser.Contract {
 
   async execute(input: CreateUser.Input): CreateUser.Output {
     const passwordHash = this.hashGenerator.hash(input.password);
+    const userAlreadyRegistered = await this.userRepository.findByParam({
+      key: 'email',
+      value: input.email,
+    });
+    if (userAlreadyRegistered) throw new UserEmailAlreadyRegisteredException();
     const user = User.create({
       email: input.email,
       firstName: input.firstName,
       lastName: input.lastName,
-      passwordHash,
+      password: passwordHash,
     });
     await this.userRepository.save(user);
     return {

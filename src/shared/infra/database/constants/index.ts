@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-const scriptsPath = join(__dirname, '..', 'database', 'migrations', 'scripts');
+const scriptsPath = join(__dirname, '..', 'migrations', 'scripts');
 
 export const SCRIPT_CONSTANTS = {
   CREATE_SCHEMA: `${scriptsPath}/1725017388754-create-schema.sql`,
