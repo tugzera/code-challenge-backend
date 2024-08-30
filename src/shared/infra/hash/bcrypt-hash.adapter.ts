@@ -1,5 +1,5 @@
 import { compareSync, hashSync } from 'bcrypt';
-import { HashGenerator } from '../contracts/hash-generator';
+import { HashGenerator } from '../../domain/contracts/hash-generator';
 
 export class BcryptHashAdapter implements HashGenerator {
   private HASH_ROUNDS = 13;

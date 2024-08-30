@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { ConnectionProviderFactory } from './providers/database-connection.provider';
-import { HashGeneratorProviderFactory } from './providers/hash-generator.provider';
+import { ConnectionProviderFactory } from './infra/ioc/providers/database-connection.provider';
+import { HashGeneratorProviderFactory } from './infra/ioc/providers/hash-generator.provider';
 
 @Global()
 @Module({

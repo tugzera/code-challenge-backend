@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { typeormConfig } from '../database/config';
-import { TypeormConnection } from '../database/typeorm-connection';
+import { typeormConfig } from '../../database/config';
+import { TypeormConnection } from '../../database/typeorm-connection';
 import { SharedProvider } from '../shared-provider';
 
 export class ConnectionProviderFactory {

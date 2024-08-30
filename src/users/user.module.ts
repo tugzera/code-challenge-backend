@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './controller/user.controller';
-import { CreateUserProviderFactory } from './providers/create-user.provider';
-import { UserRepositoryProviderFactory } from './providers/user-repository.provider';
+import { CreateUserProviderFactory } from './infra/ioc/providers/create-user.provider';
+import { UserRepositoryProviderFactory } from './infra/ioc/providers/user-repository.provider';
+import { UserController } from './presentation/controller/user.controller';
 
 @Module({
   imports: [],

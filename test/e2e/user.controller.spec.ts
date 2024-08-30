@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
-import { UserTypeormModel } from 'src/shared/database/models/user.model';
-import { CreateUserDto } from 'src/users/dtos/inputs';
+import { UserTypeormModel } from 'src/shared/infra/database/models/user.model';
+import { CreateUserDto } from 'src/users/presentation/dtos/inputs';
 import { agent } from 'supertest';
 import { app, databaseConnection } from 'test/setup';
 

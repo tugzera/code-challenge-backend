@@ -3,8 +3,8 @@ import { Test } from '@nestjs/testing';
 import { config } from 'dotenv';
 import { appFactory } from 'src/app.factory';
 import { AppModule } from 'src/app.module';
-import { typeormConfig } from 'src/shared/database/config';
-import { TypeormConnection } from 'src/shared/database/typeorm-connection';
+import { typeormConfig } from 'src/shared/infra/database/config';
+import { TypeormConnection } from 'src/shared/infra/database/typeorm-connection';
 import { DataSource } from 'typeorm';
 
 config({

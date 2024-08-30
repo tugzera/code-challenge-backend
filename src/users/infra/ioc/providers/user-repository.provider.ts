@@ -1,10 +1,10 @@
 import { Provider } from '@nestjs/common';
-import { UserTypeormModel } from 'src/shared/database/models/user.model';
-import { SharedProvider } from 'src/shared/shared-provider';
 import { DataSource } from 'typeorm';
-import { UserTypeormMapper } from '../database/repositories/mapper/user-typeorm.mapper';
-import { UserTypeormRepository } from '../database/repositories/user-typeorm.repository';
-import { UserRepository } from '../domain/repositories';
+import { UserTypeormModel } from '../../../../shared/infra/database/models/user.model';
+import { SharedProvider } from '../../../../shared/infra/ioc/shared-provider';
+import { UserRepository } from '../../../../users/domain/repositories';
+import { UserTypeormMapper } from '../../database/repositories/mapper/user-typeorm.mapper';
+import { UserTypeormRepository } from '../../database/repositories/user-typeorm.repository';
 import { UserProvider } from '../user-provider';
 
 export class UserRepositoryProviderFactory {

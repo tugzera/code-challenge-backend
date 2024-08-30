@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { PasswordDecorator } from '../../../shared/decorators/password.decorator';
+import { PasswordDecorator } from '../../../../shared/presentation/decorators/password.decorator';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'Henrique' })

@@ -1,5 +1,5 @@
-import { BaseMapper } from 'src/shared/database/mapper/base.mapper';
-import { UserTypeormModel } from 'src/shared/database/models/user.model';
+import { BaseMapper } from 'src/shared/infra/database/mapper/base.mapper';
+import { UserTypeormModel } from 'src/shared/infra/database/models/user.model';
 import { User } from 'src/users/domain/user';
 
 export class UserTypeormMapper implements BaseMapper<User, UserTypeormModel> {

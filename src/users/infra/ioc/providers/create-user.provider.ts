@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
-import { HashGenerator } from 'src/shared/contracts/hash-generator';
-import { SharedProvider } from 'src/shared/shared-provider';
-import { UserRepository } from '../domain/repositories';
-import { CreateUser } from '../services/create-user';
+import { HashGenerator } from '../../../../shared/domain/contracts/hash-generator';
+import { SharedProvider } from '../../../../shared/infra/ioc/shared-provider';
+import { CreateUser } from '../../../../users/application/use-cases/create-user';
+import { UserRepository } from '../../../../users/domain/repositories';
 import { UserProvider } from '../user-provider';
 
 export class CreateUserProviderFactory {

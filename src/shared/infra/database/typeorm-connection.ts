@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { DatabaseConnection } from '../contracts/database-connection';
+import { DatabaseConnection } from '../../domain/contracts/database-connection';
 
 export class TypeormConnection implements DatabaseConnection {
   private connection: DataSource | null;

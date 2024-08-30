@@ -6,7 +6,7 @@ import {
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
-import { BaseEntity as DomainEntity } from '../../domain/entities/base.entity';
+import { BaseEntity as DomainEntity } from '../../../domain/entities/base.entity';
 import { BaseMapper } from '../mapper/base.mapper';
 
 export abstract class BaseTypeormRepository<
