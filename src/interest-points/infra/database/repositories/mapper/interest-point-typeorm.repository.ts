@@ -19,13 +19,14 @@ export class InterestPointTypeormMapper
   }
 
   modelToEntity(model: InterestPointTypeormModel): InterestPoint {
+    const position: { x: number; y: number } = model.position as any;
     return new InterestPoint({
       id: model.id,
       alternativeId: model.alternativeId,
       name: model.name,
       description: model.description,
-      latitude: Number(model.position.toString().split(',')[0]),
-      longitude: Number(model.position.toString().split(',')[1]),
+      latitude: Number(position.x),
+      longitude: Number(position.y),
       interestPointCategoryId: model.interestPointCategoryId,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
